@@ -1,0 +1,29 @@
+# --- Data & ML core ---
+pandas==2.2.2
+scikit-learn==1.5.1
+numpy==1.26.4
+
+# --- Experiment tracking & model registry ---
+mlflow==2.15.1
+
+# --- Workflow orchestration ---
+prefect==3.4.8
+
+# --- Drift detection ---
+evidently==0.4.33
+
+# --- API ---
+fastapi==0.112.0
+uvicorn==0.30.5
+pydantic==2.8.2
+
+# --- Operational monitoring ---
+prometheus-client==0.20.0
+
+# --- Testing ---
+pytest==8.3.2
+httpx==0.27.0
+
+# --- Utilities ---
+joblib==1.4.2
+setuptools<81
