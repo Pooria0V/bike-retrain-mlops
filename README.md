@@ -48,8 +48,8 @@ FastAPI       ──▶  always serves current @champion model
 ```
 bike-retrain-mlops/
 ├── data/
-│   ├── raw/                     # Original hour.csv dataset
-│   └── monthly_chunks/          # Dataset split by month (simulates incremental data)
+│   ├── raw/                     # Original hour.csv dataset (downloaded separately)
+│   └── monthly_chunks/          # Dataset split by month (auto-generated)
 ├── src/
 │   ├── data/data_prep.py        # Load, clean, and split dataset
 │   ├── training/
@@ -79,7 +79,7 @@ bike-retrain-mlops/
 ### 1. Setup
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Pooria0V/bike-retrain-mlops.git
 cd bike-retrain-mlops
 python -m venv venv
 source venv/bin/activate
@@ -88,7 +88,11 @@ pip install -r requirements.txt
 
 ### 2. Prepare data
 
+> The dataset is not included in the repository (too large for git).
+> Download it with the command below — it will be fetched automatically.
+
 ```bash
+mkdir -p data/raw
 curl -L -o data/raw/hour.csv \
   "https://raw.githubusercontent.com/muditp19/UCI_Bike-sharing-dataset/master/hour.csv"
 
