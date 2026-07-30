@@ -38,3 +38,41 @@ jobs:
       - name: Run tests
         run: |
           python -m pytest src/tests/ -v --tb=short
+
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Run ruff
+        run: |
+          ruff check src/ --ignore E501
+          # E501: line too long — ignored because it's a style preference
+          # not a correctness issue
+
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: test
+    # only runs if test job passes
+    # no point building a broken image
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t bike-retrain-mlops-api:ci .
