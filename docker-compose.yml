@@ -1,50 +1,41 @@
 # docker-compose.yml
-# Brings up all services together with one command: docker compose up
 
 services:
 
-  # --- MLflow tracking server ---
-  # Stores experiment runs, metrics, and model artifacts
   mlflow:
-    image: python:3.12-slim
-    working_dir: /mlflow
-    volumes:
-      - mlflow_data:/mlflow
-    command: >
-      bash -c "pip install -q mlflow==2.15.1 'setuptools<81' &&
-               mlflow server
-               --host 0.0.0.0
-               --port 5001
-               --backend-store-uri sqlite:///mlflow.db
-               --default-artifact-root /mlflow/artifacts"
+    image: ghcr.io/mlflow/mlflow:v2.15.1
     ports:
       - "5001:5001"
+    volumes:
+      - ./mlflow-artifacts:/home/pooria/project/bike-retrain-mlops/mlflow-artifacts
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5001
+      --backend-store-uri sqlite:////home/pooria/project/bike-retrain-mlops/mlflow-artifacts/mlflow.db
+      --default-artifact-root /home/pooria/project/bike-retrain-mlops/mlflow-artifacts/artifacts
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
-      interval: 10s
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5001/health')"]
+      interval: 15s
       timeout: 5s
       retries: 5
+      start_period: 30s
 
-  # --- FastAPI prediction service ---
-  # Loads the current champion model from MLflow and serves predictions
   api:
     build: .
     ports:
       - "8000:8000"
     environment:
-      # Point to the MLflow service by its Docker network name
       MLFLOW_TRACKING_URI: http://mlflow:5001
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
+      - ./mlflow-artifacts:/home/pooria/project/bike-retrain-mlops/mlflow-artifacts
     depends_on:
       mlflow:
         condition: service_healthy
     restart: on-failure
 
-  # --- Prometheus ---
-  # Scrapes /metrics from the API every 15 seconds
-  # and stores them as time-series data
   prometheus:
     image: prom/prometheus:latest
     ports:
@@ -54,17 +45,16 @@ services:
     depends_on:
       - api
 
-  # --- Grafana ---
-  # Reads from Prometheus and displays dashboards
-  # Default login: admin / admin
   grafana:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
       - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
     depends_on:
       - prometheus

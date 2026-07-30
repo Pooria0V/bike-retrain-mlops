@@ -36,4 +36,5 @@ data/raw/
 Thumbs.db
 
 # pytest cache
-.pytest_cache/
+.pytest_cache/mlflow-artifacts/
+mlflow-artifacts/

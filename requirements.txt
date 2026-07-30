@@ -15,7 +15,7 @@ evidently==0.4.33
 # --- API ---
 fastapi==0.112.0
 uvicorn==0.30.5
-pydantic==2.8.2
+pydantic>=2.9,<3.0.0
 
 # --- Operational monitoring ---
 prometheus-client==0.20.0

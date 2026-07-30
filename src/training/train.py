@@ -105,6 +105,8 @@ def train_model(
         X, y, test_size=0.2, shuffle=False
     )
 
+    os.environ["MLFLOW_TRACKING_URI"] = TRACKING_URI
+
     # --- Configure MLflow ---
     mlflow.set_tracking_uri(TRACKING_URI)
     mlflow.set_experiment(experiment_name)
