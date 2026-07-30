@@ -1,17 +1,4 @@
 # .github/workflows/ci.yml
-# Runs automatically on every push or pull request to main branch.
-#
-# What is GitHub Actions?
-# A CI/CD (Continuous Integration) service built into GitHub.
-# Every time you push code, GitHub runs this file automatically
-# on their servers — no need to run tests manually.
-#
-# Pipeline steps:
-#   1. Checkout code
-#   2. Set up Python
-#   3. Install dependencies
-#   4. Run all tests
-
 name: CI Pipeline
 
 on:
@@ -28,15 +15,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        # Downloads your repository code onto the GitHub runner machine
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
-          # cache: "pip" speeds up subsequent runs by caching
-          # downloaded packages — no re-download if requirements.txt unchanged
 
       - name: Install dependencies
         run: |
@@ -44,8 +28,13 @@ jobs:
           pip install "setuptools<81"
           pip install -r requirements.txt
 
+      - name: Download dataset
+        run: |
+          mkdir -p data/raw data/monthly_chunks logs
+          curl -L -o data/raw/hour.csv \
+            "https://raw.githubusercontent.com/muditp19/UCI_Bike-sharing-dataset/master/hour.csv"
+          python -m src.data.data_prep
+
       - name: Run tests
         run: |
           python -m pytest src/tests/ -v --tb=short
-        # --tb=short shows shorter tracebacks on failure
-        # easier to read in GitHub Actions log

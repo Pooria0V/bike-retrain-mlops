@@ -6,12 +6,12 @@ Why httpx and TestClient?
 FastAPI's TestClient runs the app in-process without needing
 a real running server — fast, isolated, and no port conflicts.
 
-Note: these tests mock the model so they don't need
-a live MLflow server or a trained model to run in CI.
+Note: these tests mock the model and prediction logger so they don't need
+a live MLflow server, a trained model, or a logs directory to run in CI.
 """
 
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from fastapi.testclient import TestClient
 import numpy as np
 
@@ -35,15 +35,15 @@ VALID_PAYLOAD = {
 @pytest.fixture
 def client():
     """
-    Create a TestClient with a mocked model.
+    Create a TestClient with a mocked model and mocked prediction logger.
 
-    Why mock?
-    We don't want tests to depend on a running MLflow server.
-    The mock replaces the real model with a fake one that always
-    returns 200.0 — so we can test API logic independently.
+    Why mock log_prediction?
+    In CI there is no logs/ directory, so writing to predictions.csv
+    would fail. Mocking it isolates the API logic from filesystem state.
     """
     with patch("src.api.main.model") as mock_model, \
-         patch("src.api.main.model_version", "test-v1"):
+         patch("src.api.main.model_version", "test-v1"), \
+         patch("src.api.main.log_prediction"):
         mock_model.predict.return_value = np.array([200.0])
         from src.api.main import app
         yield TestClient(app)
