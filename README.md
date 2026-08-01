@@ -1,5 +1,7 @@
 # Bike Demand Auto-Retraining MLOps Pipeline
 
+![CI](https://github.com/Pooria0V/bike-retrain-mlops/actions/workflows/ci.yml/badge.svg)
+
 An end-to-end MLOps pipeline that automatically detects data drift,
 retrains a machine learning model, and promotes it to production —
 all without manual intervention.
