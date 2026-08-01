@@ -13,7 +13,7 @@ Think of it like a speedometer in a car:
 - The dashboard (Grafana) reads and displays it
 """
 
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 
 # Counter: only goes up — total number of predictions served
 PREDICTION_COUNTER = Counter(

@@ -5,12 +5,13 @@ Output is a simple decision: promote or reject.
 """
 
 import os
-import pandas as pd
-import numpy as np
 from pathlib import Path
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
 import mlflow
 import mlflow.sklearn
+import numpy as np
+import pandas as pd
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 CHUNKS_DIR = Path("data/monthly_chunks")
 TARGET_COLUMN = "cnt"
@@ -63,7 +64,7 @@ def load_production_model():
         client.get_model_version_by_alias("bike-demand-model", "champion")
         model_uri = "models:/bike-demand-model@champion"
         return mlflow.sklearn.load_model(model_uri)
-    except Exception:
+    except (mlflow.exceptions.MlflowException, OSError):
         return None
 
 

@@ -12,14 +12,15 @@ Key design decisions:
 
 import os
 import time
+from contextlib import asynccontextmanager
+
 import mlflow
 import mlflow.sklearn
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import Response
-from contextlib import asynccontextmanager
 
-from src.api.schemas import BikeFeatures, PredictionResponse, HealthResponse
+from src.api.schemas import BikeFeatures, HealthResponse, PredictionResponse
 from src.monitoring.metrics import (
     PREDICTION_COUNTER,
     PREDICTION_LATENCY,
@@ -55,7 +56,7 @@ def load_champion_model():
         model_uri = f"models:/{MODEL_NAME}@{CHAMPION_ALIAS}"
         model = mlflow.sklearn.load_model(model_uri)
         print(f"Model loaded: {MODEL_NAME} version {model_version}")
-    except Exception as e:
+    except (mlflow.exceptions.MlflowException, OSError) as e:
         print(f"WARNING: Could not load model — {e}")
         model = None
         model_version = "unavailable"

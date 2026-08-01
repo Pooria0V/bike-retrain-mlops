@@ -19,9 +19,10 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir "setuptools<81" && \
     pip install --no-cache-dir -r requirements.txt
 
-# --- Copy source code ---
+# --- Copy source code only ---
+# Data is mounted at runtime via docker-compose volumes,
+# not baked into the image — keeping the image small and portable.
 COPY src/ ./src/
-COPY data/ ./data/
 
 # Expose the port FastAPI will run on
 EXPOSE 8000

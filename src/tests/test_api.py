@@ -10,11 +10,11 @@ Note: these tests mock the model and prediction logger so they don't need
 a live MLflow server, a trained model, or a logs directory to run in CI.
 """
 
-import pytest
 from unittest.mock import patch
-from fastapi.testclient import TestClient
-import numpy as np
 
+import numpy as np
+import pytest
+from fastapi.testclient import TestClient
 
 VALID_PAYLOAD = {
     "season": 2,

@@ -14,12 +14,12 @@ Pipeline steps:
   4. promote_task        -> promote or reject the new model
 """
 
-from prefect import flow, task, get_run_logger
-from src.monitoring.drift_check import check_drift
-from src.training.train import train_model
-from src.training.evaluate import run_evaluation
-from src.registry.promote import run_promotion
+from prefect import flow, get_run_logger, task
 
+from src.monitoring.drift_check import check_drift
+from src.registry.promote import run_promotion
+from src.training.evaluate import run_evaluation
+from src.training.train import train_model
 
 # --------------------------------------------------------------------------
 # Tasks

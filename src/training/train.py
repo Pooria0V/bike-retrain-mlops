@@ -5,14 +5,15 @@ and logging the full experiment to MLflow.
 """
 
 import os
-import pandas as pd
-import numpy as np
 from pathlib import Path
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
 import mlflow
 import mlflow.sklearn
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
 
 CHUNKS_DIR = Path("data/monthly_chunks")
 TARGET_COLUMN = "cnt"
@@ -72,7 +73,7 @@ def compute_metrics(y_true, y_pred) -> dict:
 def train_model(
     up_to_month: str,
     experiment_name: str = "bike-retrain",
-    model_params: dict = None,
+    model_params: dict | None = None,
 ) -> str:
     """
     Train a model and log everything to MLflow.

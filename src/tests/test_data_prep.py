@@ -8,10 +8,11 @@ What we test here:
 - split_into_monthly_chunks: creates correct number of files
 """
 
-import pytest
-import pandas as pd
 from pathlib import Path
-from src.data.data_prep import load_raw_data, build_features, split_into_monthly_chunks
+
+import pandas as pd
+
+from src.data.data_prep import build_features, load_raw_data, split_into_monthly_chunks
 
 RAW_PATH = Path("data/raw/hour.csv")
 

@@ -6,11 +6,13 @@ We test the helper functions independently from MLflow
 so tests run fast without needing a running MLflow server.
 """
 
-import pytest
-import pandas as pd
-import numpy as np
 from pathlib import Path
-from src.training.train import prepare_X_y, compute_metrics
+
+import numpy as np
+import pandas as pd
+import pytest
+
+from src.training.train import compute_metrics, prepare_X_y
 
 CHUNKS_DIR = Path("data/monthly_chunks")
 
@@ -50,7 +52,7 @@ def test_prepare_X_y_separates_target():
 def test_prepare_X_y_drops_dteday():
     """dteday must be dropped from X since it's not a usable feature."""
     df = make_sample_df()
-    X, y = prepare_X_y(df)
+    X, _y = prepare_X_y(df)
     assert "dteday" not in X.columns
 
 

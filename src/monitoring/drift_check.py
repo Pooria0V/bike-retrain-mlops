@@ -5,11 +5,12 @@ Compares statistical distribution of new data against training data
 to decide whether retraining is needed.
 """
 
-import pandas as pd
 from pathlib import Path
-from evidently.report import Report
+
+import pandas as pd
 from evidently.metric_preset import DataDriftPreset
 from evidently.metrics import DatasetDriftMetric
+from evidently.report import Report
 
 CHUNKS_DIR = Path("data/monthly_chunks")
 REPORTS_DIR = Path("reports/drift")

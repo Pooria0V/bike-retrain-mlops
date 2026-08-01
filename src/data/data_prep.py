@@ -4,8 +4,9 @@ Prepares the Bike Sharing dataset and splits it into monthly chunks
 to simulate incremental data arrival in the auto-retraining pipeline.
 """
 
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 RAW_PATH = Path("data/raw/hour.csv")
 CHUNKS_DIR = Path("data/monthly_chunks")

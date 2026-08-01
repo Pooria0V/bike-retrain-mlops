@@ -5,6 +5,7 @@ Uses aliases instead of stages (stages deprecated since MLflow 2.9).
 """
 
 import os
+
 import mlflow
 from mlflow.tracking import MlflowClient
 
@@ -30,7 +31,7 @@ def get_champion_version(client: MlflowClient) -> str | None:
     try:
         version_info = client.get_model_version_by_alias(MODEL_NAME, CHAMPION_ALIAS)
         return version_info.version
-    except Exception:
+    except (mlflow.exceptions.MlflowException, OSError):
         return None
 
 
@@ -76,8 +77,8 @@ def reject_challenger(challenger_run_id: str) -> bool:
 
     try:
         client.delete_registered_model_alias(MODEL_NAME, CHALLENGER_ALIAS)
-    except Exception:
-        pass
+    except (mlflow.exceptions.MlflowException, OSError):
+        print("Challenger alias not found, skipping deletion")
 
     return False
 
